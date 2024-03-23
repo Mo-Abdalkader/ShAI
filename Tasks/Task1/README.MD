@@ -1,1 +1,1 @@
-# Full respect for ShAI exercises 
+# Full respect for ShAI efforts 

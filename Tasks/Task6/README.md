@@ -1,4 +1,4 @@
-# Machine Learning Project Life Cycle README
+# Machine Learning Project Life Cycle
 
 ## Introduction
 
@@ -66,8 +66,8 @@ Below is a detailed breakdown of the project components:
 > Importance: Hyperparameter tuning optimizes the model's performance by searching for the best combination of hyperparameters. Fine-tuning hyperparameters improves the model's predictive accuracy and generalization capabilities. It helps prevent overfitting and ensures that the model is robust across different datasets.
 - Perform Grid Search CV to find the best hyperparameters for Random Forest Regressor.
 - Display the best hyperparameters.
-- Perform Randomized Search CV for hyperparameter tuning.
-- Display the best hyperparameters from randomized search.
+- Perform Grid Search CV for hyperparameter tuning.
+- Display the best hyperparameters from grid search.
 
 ### Feature Importance
 > Importance: Understanding feature importance helps identify which features have the most significant impact on the model's predictions. This knowledge is valuable for feature selection, identifying key drivers of the target variable, and explaining the model's behavior to stakeholders. Feature importance analysis guides feature engineering efforts and provides insights into the underlying problem domain.

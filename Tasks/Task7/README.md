@@ -355,13 +355,161 @@ X_train, X_test, y_train, y_test = train_test_split(scaled_X, y, random_state=42
 ```
 ***
 
-#### Model Selection & Training
+#### 3.3 Model Selection & Training
+Choose a set of candidate models suitable for the task
+##### 3.3.1 Linear Regression
+
+```python
+from sklearn.linear_model import LinearRegression
+
+linearReg_model = LinearRegression()
+linearReg_model.fit(X_train, y_train)
+
+linearReg_y_pred = linearReg_model.predict(X_test)
+linearReg_RMSE = np.sqrt(mean_squared_error(y_test, linearReg_y_pred))
+linearReg_MAE = mean_absolute_error(y_test, linearReg_y_pred)
 
 
+print("Linear Regression RMSE :", linearReg_RMSE)
+print("Linear Regression MAE  :", linearReg_MAE, "\n")
+
+for index, (real_value, predicted_value) in zip(range(10), zip(y_test, linearReg_y_pred)):
+    print(f"Real value is {str(round(real_value)).rjust(5)} | The predicted value is {str(round(predicted_value)).rjust(5)}")
+```
+**Output :**
+```markdown
+Linear Regression RMSE : 1223.9802099892302
+Linear Regression MAE  : 859.7176167047971 
+
+Real value is  3390 | The predicted value is  4335
+Real value is  3140 | The predicted value is  3433
+Real value is  2639 | The predicted value is  3784
+Real value is   658 | The predicted value is   193
+Real value is  1125 | The predicted value is  1186
+Real value is  1943 | The predicted value is  2426
+Real value is   449 | The predicted value is  -969
+Real value is   971 | The predicted value is  2054
+Real value is   765 | The predicted value is  -145
+Real value is 14476 | The predicted value is 14071
+```
+
+##### 3.3.2 Gradient Boosting
+
+```python
+from sklearn.ensemble import GradientBoostingRegressor
+
+gradientBoosting_model = GradientBoostingRegressor(random_state=42)
+gradientBoosting_model.fit(X_train, y_train)
+
+gradientBoosting_y_pred = gradientBoosting_model.predict(X_test)
+gradientBoosting_RMSE = np.sqrt(mean_squared_error(y_test, gradientBoosting_y_pred))
+gradientBoosting_MAE = mean_absolute_error(y_test, gradientBoosting_y_pred)
+
+print("Gradient Boosting RMSE:", gradientBoosting_RMSE)
+print("Gradient Boosting MAE  :", gradientBoosting_MAE, "\n")
+
+for index, (real_value, predicted_value) in zip(range(10), zip(y_test, gradientBoosting_y_pred)):
+    print(f"Real value is {str(round(real_value)).rjust(5)} | The predicted value is {str(round(predicted_value)).rjust(5)}")
+```
+**Output :**
+```markdown
+Gradient Boosting RMSE: 624.7616973831518
+Gradient Boosting MAE  : 338.49529262139635 
+
+Real value is  3390 | The predicted value is  3304
+Real value is  3140 | The predicted value is  2822
+Real value is  2639 | The predicted value is  3210
+Real value is   658 | The predicted value is   755
+Real value is  1125 | The predicted value is   950
+Real value is  1943 | The predicted value is  1908
+Real value is   449 | The predicted value is   452
+Real value is   971 | The predicted value is  1210
+Real value is   765 | The predicted value is   777
+Real value is 14476 | The predicted value is 16082
+```
+
+##### 3.3.3 Decision Tree
+
+```python
+from sklearn.tree import DecisionTreeRegressor
+
+decisionTree_model = DecisionTreeRegressor()
+decisionTree_model.fit(X_train, y_train)
+
+decisionTree_y_pred = decisionTree_model.predict(X_test)
+decisionTree_RMSE = np.sqrt(mean_squared_error(y_test, decisionTree_y_pred))
+decisionTree_MAE = mean_absolute_error(y_test, decisionTree_y_pred)
+
+print("Decision Tree RMSE :", decisionTree_RMSE)
+print("Decision Tree MAE  :", decisionTree_MAE, "\n")
+
+for index, (real_value, predicted_value) in zip(range(10), zip(y_test, decisionTree_y_pred)):    
+    print(f"Real value is {str(round(real_value)).rjust(5)} | The predicted value is {str(round(predicted_value)).rjust(5)}")
+```
+**Output :**
+```markdown
+Decision Tree RMSE : 717.1974514666841
+Decision Tree MAE  : 346.60054137664343 
+
+Real value is  3390 | The predicted value is  3780
+Real value is  3140 | The predicted value is  2606
+Real value is  2639 | The predicted value is  3084
+Real value is   658 | The predicted value is   658
+Real value is  1125 | The predicted value is   877
+Real value is  1943 | The predicted value is  1837
+Real value is   449 | The predicted value is   576
+Real value is   971 | The predicted value is  1162
+Real value is   765 | The predicted value is   661
+Real value is 14476 | The predicted value is 18795
+```
+
+##### 3.3.4 Random Forest
+
+```python
+from sklearn.ensemble import RandomForestRegressor
+
+randomForest_model = RandomForestRegressor(n_estimators=200, random_state=42)
+randomForest_model.fit(X_train, y_train)
+
+randomForest_y_pred = randomForest_model.predict(X_test)
+randomForest_RMSE = np.sqrt(mean_squared_error(y_test, randomForest_y_pred))
+randomForest_MAE  = mean_absolute_error(y_test, randomForest_y_pred)
+
+print("Random Forest RMSE :", randomForest_RMSE)
+print("Random Forest MAE  :", randomForest_MAE, "\n)
+
+for index, (real_value, predicted_value) in zip(range(1, 20), zip(y_test, randomForest_y_pred)):        
+    print(f"Real value is {str(round(real_value)).rjust(5)} | The predicted value is {str(round(predicted_value)).rjust(5)}")
+```
+**Output :**
+```markdown
+Random Forest RMSE : 518.8744073629715
+Random Forest MAE  : 262.29325709636134
+
+Real value is  3390 | The predicted value is  3362
+Real value is  3140 | The predicted value is  2818
+Real value is  2639 | The predicted value is  3297
+Real value is   658 | The predicted value is   716
+Real value is  1125 | The predicted value is   898
+Real value is  1943 | The predicted value is  1890
+Real value is   449 | The predicted value is   540
+Real value is   971 | The predicted value is  1080
+Real value is   765 | The predicted value is   667
+Real value is 14476 | The predicted value is 16464
+Real value is  2496 | The predicted value is  2516
+Real value is  6023 | The predicted value is  6267
+Real value is   600 | The predicted value is   653
+Real value is 16171 | The predicted value is 17368
+Real value is   475 | The predicted value is   517
+Real value is  5292 | The predicted value is  4725
+Real value is  2772 | The predicted value is  3058
+Real value is  5599 | The predicted value is  5843
+Real value is  4238 | The predicted value is  4329
+```
 
 ***
 
-#### Model Evaluation
+#### 3.4 Model Evaluation
 Critical step in assessing the performance and effectiveness of a machine learning model
 ```python
 randomForest_model2 = RandomForestRegressor()
@@ -373,7 +521,7 @@ for score in forest_rmse_scores:
 ```
 ***
 
-#### Model Fine-Tune
+#### 3.5 Model Fine-Tune
 Process of optimizing the hyperparameters of a machine learning model to improve its performance on the validation or test dataset
 ```python
 param_grid = {
@@ -430,7 +578,7 @@ plt.show()
 - The most influential features in the model are `vol` and `carat`
 
 ***
-#### Model predictions
+#### 3.6 Model predictions
 - Retrieves the best model obtained from a grid search
 - Applies this model to make predictions on the `submission_data`
 
@@ -441,7 +589,7 @@ best_predictions = best_model.predict(submission_data)
 
 ***
 
-####  Submission Dataset (For Competition)
+####  3.7 Submission Dataset (For Competition)
 The dataset to be submitted it should contain only 2 columns, 1st one is the IDs, 2nd one is the predictions
 So we need to concatenate the test_df IDs with the model predictions
 ```python
@@ -449,7 +597,7 @@ data_for_sub = pd.DataFrame({"ID":test_IDs, "price":best_predictions2})
 data_for_sub.to_csv("Submission RF.csv", index=False)
 ```
 
-### Summary
+### 4 Summary
 This project focused on developing a machine learning regression model to predict diamond prices using a dataset containing various attributes of nearly 54,000 diamonds. Key steps and findings include:
 
 - Data Exploration and Preparation: The dataset was thoroughly explored, and essential preprocessing steps were taken, including data cleaning and feature engineering. Significant attributes such as carat weight, cut quality, color grade, and clarity were identified as primary predictors of diamond prices.

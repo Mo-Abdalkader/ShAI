@@ -137,3 +137,18 @@ train_df["clarity"].replace({"I1":0, "SI2":1, "SI1":2, "VS2":3, "VS1":4, "VVS2":
 test_df ["clarity"].replace({"I1":0, "SI2":1, "SI1":2, "VS2":3, "VS1":4, "VVS2":5, "VVS1":6, "IF":7}, inplace=True)
 ```
 
+#### Data Visualization
+#### Model Selection & Training
+#### Model Evaluation
+####  Submission Dataset (For Competition)
+
+
+### Summary
+This project focused on developing a machine learning regression model to predict diamond prices using a dataset containing various attributes of nearly 54,000 diamonds. Key steps and findings include:
+
+- Data Exploration and Preparation: The dataset was thoroughly explored, and essential preprocessing steps were taken, including data cleaning and feature engineering. Significant attributes such as carat weight, cut quality, color grade, and clarity were identified as primary predictors of diamond prices.
+
+- Modeling: Several regression models were tested, including linear regression, decision trees, random forests, and gradient boosting. Random forests emerged as the most effective model, providing the highest prediction accuracy.
+
+- Evaluation: The final model demonstrated strong performance, accurately capturing the relationships between diamond attributes and prices, making it a valuable tool for consumers and retailers in the diamond market.
+

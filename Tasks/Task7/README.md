@@ -358,6 +358,7 @@ X_train, X_test, y_train, y_test = train_test_split(scaled_X, y, random_state=42
 #### 3.3 Model Selection & Training
 Choose a set of candidate models suitable for the task
 ##### 3.3.1 Linear Regression
+Used to find the best-fitting straight line that describes the relationship between the variables
 
 ```python
 from sklearn.linear_model import LinearRegression
@@ -394,6 +395,7 @@ Real value is 14476 | The predicted value is 14071
 ```
 
 ##### 3.3.2 Gradient Boosting
+Builds a strong predictive model by sequentially adding weak learners, typically decision trees, to the ensemble.
 
 ```python
 from sklearn.ensemble import GradientBoostingRegressor
@@ -429,6 +431,7 @@ Real value is 14476 | The predicted value is 16082
 ```
 
 ##### 3.3.3 Decision Tree
+It's a tree-like structure where each internal node represents a "test" on an attribute each branch represents the outcome of the test, and each leaf node represents a class label or a numeric value (in regression tasks)
 
 ```python
 from sklearn.tree import DecisionTreeRegressor
@@ -464,6 +467,8 @@ Real value is 14476 | The predicted value is 18795
 ```
 
 ##### 3.3.4 Random Forest
+Builds multiple decision trees during training and outputs the average prediction (regression) of the individual trees. 
+It combines the predictions of multiple decision trees to improve generalization and robustness over a single decision tree.
 
 ```python
 from sklearn.ensemble import RandomForestRegressor

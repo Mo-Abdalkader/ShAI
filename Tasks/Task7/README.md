@@ -1,14 +1,18 @@
-# ShAI Task 7 Documentation
+# Documentation
 
-- Data Preprocessing
-- Data Visualization
-- Model Selection
-- Model Training
-- Model Evaluation
-- Submission Dataset (For Competition)¶
+## Content Table
+1. Problem Statement
+2. Data Description
+3. Methodology
+   1. Data Preprocessing
+   2. Data Visualization
+   3. Model Selection & Training
+   4. Model Evaluation
+   5.  Submission Dataset (For Competition)
+4. Summary
 
 
-
+### 
 
 
 ```markdown

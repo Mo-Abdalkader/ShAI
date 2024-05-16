@@ -36,4 +36,28 @@ table 'width of top of diamond relative to widest point' --> 43 : 95
 ```
 
 ### 3. Methodology
-.......... #### 3.1 Data Preprocessing
+#### 3.1 Data Preprocessing
+Data preprocessing is a crucial step in preparing a dataset for machine learning. It involves cleaning, transforming, and organizing the data to ensure that it is in the best possible condition for model training.
+
+**Code : **
+```python
+# Summary of the DataFrame, including the data types and count of non-null values for each column.
+train_df.info()
+
+# Summary statistics for the numerical columns in the DataFrame
+train_df.describe()
+
+# Summary statistics for the categorical columns in the DataFrame
+train_df.describe(include='O')
+
+# Count the number of missing values (NaN) in each column of the DataFrame
+train_df.isna().sum()
+
+# Count the number of duplicate rows in the DataFrame
+train_df.duplicated().sum()
+
+# Randomly select and display 5 rows from the DataFrame
+train_df.sample(5)
+
+
+```

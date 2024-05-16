@@ -15,6 +15,8 @@
 ### 1. Problem Statement
 The objective of this project is to develop a predictive model that accurately estimates the price of diamonds based on their attributes. Given the significant variability in diamond prices due to differences in physical characteristics and quality, the goal is to utilize machine learning techniques to identify patterns and relationships within the dataset that can predict the price of a diamond. This will aid consumers and retailers in making informed decisions regarding diamond purchases and sales.
 
+***
+
 ### 2. Data Description
 The dataset contains detailed information on nearly 54,000 diamonds, including their prices and various physical and quality attributes. Each record in the dataset represents a unique diamond and includes the following features:
 ```markdown
@@ -34,6 +36,8 @@ depth 'total depth percentage' ----------------------------> 43 : 79 (%)
                              
 table 'width of top of diamond relative to widest point' --> 43 : 95
 ```
+
+***
 
 ### 3. Methodology
 #### 3.1 Data Preprocessing
@@ -137,9 +141,188 @@ train_df["clarity"].replace({"I1":0, "SI2":1, "SI1":2, "VS2":3, "VS1":4, "VVS2":
 test_df ["clarity"].replace({"I1":0, "SI2":1, "SI1":2, "VS2":3, "VS1":4, "VVS2":5, "VVS1":6, "IF":7}, inplace=True)
 ```
 
-#### Data Visualization
+#### 3.2 Data Visualization
+##### 3.2.1 Correlation Heatmap
+Visulizes the correlation between the numerical features 
+``` python
+plt.subplots(figsize=(12, 8))
+sns.heatmap(train_df.corr(), annot=True)
+```
+**Insights :**
+- There is a strong positive correlation between the price (target column) and the numerical features carat, x, y, and z
+- There is an inverse relationship between the categorical features
+
+##### 3.2.2 Histogram
+Visulizes the distribution of data
+``` python
+train_df.loc[:, ["carat", "depth", "table", "x", "y", "z", "price"]].hist(figsize=(20, 15), bins=50)
+```
+
+**Insights :**
+- The presence of right skewness in most numerical features suggests a potential presence of outliers
+- The varying ranges of the data indicate a need for scaling to ensure that all features contribute equally to the model
+
+##### 3.2.3 BoxPlot
+Visulizes the distribution of data based on a five-number summary: minimum, first quartile (Q1), median (Q2), third quartile (Q3), and maximum. 
+It is useful for identifying outliers and understanding the spread and skewness of the data.
+
+``` python
+fig, axes = plt.subplots(2, 3, figsize=(16, 14))
+for i, cols in enumerate(["carat","depth", "table", "x", "y", "z"], 1):
+    sns.boxplot(data=train_df, x=cols)
+    plt.subplot(2, 3, i)
+
+plt.show()
+```
+**Insights :**
+- There are alot of outliers in the data espacially in carat, depth and price
+
+##### 3.2.4 Interquartile range (IQR)
+Can be used to detect the outliers
+``` python
+def get_outliers(col, train_df = train_df):
+    Q1 = train_df[col].quantile(0.25)
+    Q3 = train_df[col].quantile(0.75)
+    IQR = Q3 - Q1
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
+    iqr_outliers = train_df[(train_df[col] < lower_bound) | (train_df[col] > upper_bound)]
+    
+    return lower_bound, upper_bound,len(iqr_outliers)
+
+for col in train_df.columns[:7]:
+    lower_bound, upper_bound, outliers = get_outliers(col)
+    print(f"Number of outliers detected based on IQR method ({str(col).center(8)}) : ", str(outliers).rjust(4), f"Lower = {str(round(lower_bound, 3)).rjust(10)}", f"Upper = {str(round(upper_bound, 2)).rjust(10)}")        
+```
+This code is designed to:
+1) Detect Outliers: Identify potential outliers in the first seven columns of the DataFrame using the IQR method.
+2) Summarize Outliers: Print a summary of the outlier detection results for each of these columns, including the count of outliers and the calculated lower and upper bounds for identifying outliers.
+
+**Insights :**
+- As we thought before there are alot of outliers
+- in price column there are  2844 outliers
+- in depth column there are  2182 outliers
+- in carat column there are  1504 outliers
+  
+##### 3.2.5 Outliers Handling
+Using Scatter plot we can determine the boundaries of outliers
+
+``` python
+sns.scatterplot(x=train_df["carat"], y=train_df["price"])        
+```
+- Outliers were observed in the carat feature with values greater than 3.
+```python
+print(f"Carat Outliers : {len(train_df[train_df['carat'] > 3])}") # Visualization
+train_df = train_df[train_df["carat"] <= 3 ] # 3
+```
+- A total of 21 rows containing such outliers were dropped from the dataset.
+
+``` python
+sns.scatterplot(x=train_df["depth"], y=train_df["price"])      
+```
+- Outliers were noticed in the depth feature less than 50 and greater than 75.
+- A total of 14 rows containing these outliers were removed.
+
+``` python
+sns.scatterplot(x=train_df["table"], y=train_df["price"])     
+```
+- Outliers were observed in the table feature less than 50 and greater than 70.
+- A total of 9 rows containing these outliers were removed.
+
+``` python
+sns.scatterplot(data=train_df, x="x", y="price")  
+```
+- Outliers were identified in the x feature after the value 9.
+- A total of 10 rows containing these outliers were removed.
+
+``` python
+sns.scatterplot(data=train_df, x="y", y="price")
+```
+- Outliers were noticed in the y feature after the value 10.
+- No rows were found to contain such outliers.
+
+``` python
+sns.scatterplot(data=train_df, x="z", y="price")
+```
+- Outliers were observed in the z feature less than 2 and greater than 7.
+- No rows were found to contain such outliers.
+
+
+### 3.2.6 Countplot
+``` python
+``` python
+mean_price_by_cut = train_df_copy.groupby("cut")["price"].mean().reindex(cut_column_unique_ordered)
+fig, axes = plt.subplots(1, 2, figsize=(14, 6))
+sns.countplot(data=train_df_copy, x="cut", order=cut_column_unique_ordered, ax=axes[0], palette='rocket')
+axes[0].set_title("Count of Diamonds by Cut")
+axes[0].set_xlabel("Cut")
+axes[0].set_ylabel("Count")
+sns.barplot(x=mean_price_by_cut.index, y=mean_price_by_cut.values, ax=axes[1], palette='rocket')
+axes[1].set_title("Mean Price of Diamonds by Cut")
+axes[1].set_xlabel("Cut")
+axes[1].set_ylabel("Mean Price")
+
+plt.show()
+```
+This code will generate two side-by-side plots: one showing the count of diamonds for each cut category and another showing the mean price of diamonds for each cut category.
+We found there are 0 rows So,we drop it to make sure that there is not
+
+**Insights :**
+- cut (J) that have the smallest count has the largest price average
+We do so for color and clarity and found that the price dosn't depend on ctegorical features (as there are inverse relation between them and the price )
+
+### 3.2.7 Feature Engineering
+``` python
+#creating volume column in both tain and test dataframe and drop the x,y and z
+train_df_copy["vol"] = train_df_copy["x"] * train_df_copy["y"] * train_df_copy["z"] # For Categorical Visualization
+# train_df_copy.drop(["x", "y", "z"], axis=1, inplace=True)
+
+train_df["vol"] = train_df["x"] * train_df["y"] * train_df["z"]                     # For Training
+train_df.drop(["x", "y", "z"], axis=1, inplace=True)
+
+test_df["vol"] = test_df["x"] * test_df["y"] * test_df["z"]                         # For Testing
+test_df.drop(["x", "y", "z"], axis=1, inplace=True)
+```
+this reduces the dimensionality as we drop 3 columns and replaces it with one column
+
+### 3.2.8 Countplot 
+``` python
+This code will generate three side-by-side bar plots showing the mean volume of diamonds grouped by cut, color, and clarity, respectively.
+mean_vol_by_cut     = train_df_copy.groupby("cut")["vol"].mean().reindex(cut_column_unique_ordered)
+mean_vol_by_color   = train_df_copy.groupby("color")["vol"].mean().reindex(color_column_unique_ordered)
+mean_vol_by_clarity = train_df_copy.groupby("clarity")["vol"].mean().reindex(clarity_column_unique_ordered)
+fig, axes = plt.subplots(1, 3, figsize=(18, 6))
+# Mean volume by cut
+sns.barplot(x=mean_vol_by_cut.index, y=mean_vol_by_cut.values, palette='rocket', ax=axes[0])
+axes[0].set_title("Mean Volume of Diamonds by Cut")
+axes[0].set_xlabel("Cut")
+axes[0].set_ylabel("Mean Volume")
+# Mean volume by color
+sns.barplot(x=mean_vol_by_color.index, y=mean_vol_by_color.values, palette='rocket', ax=axes[1])
+axes[1].set_title("Mean Volume of Diamonds by Color")
+axes[1].set_xlabel("Color")
+axes[1].set_ylabel("Mean Volume")
+# Mean volume by clarity
+sns.barplot(x=mean_vol_by_clarity.index, y=mean_vol_by_clarity.values, palette='rocket', ax=axes[2])
+axes[2].set_title("Mean Volume of Diamonds by Clarity")
+axes[2].set_xlabel("Clarity")
+axes[2].set_ylabel("Mean Volume")
+
+plt.show()
+```
+**insights :**
+- The category with highest volume has highest price
+
+***
+
 #### Model Selection & Training
+
+***
+
 #### Model Evaluation
+
+***
+
 ####  Submission Dataset (For Competition)
 
 

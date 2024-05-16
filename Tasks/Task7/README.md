@@ -8,7 +8,9 @@
    2. Data Visualization
    3. Model Selection & Training
    4. Model Evaluation
-   5.  Submission Dataset (For Competition)
+   5. Model Fine-Tune
+   6. Model predictions
+   7. Dataset Submission (For Competition)
 4. Summary
 
 
@@ -209,46 +211,60 @@ Using Scatter plot we can determine the boundaries of outliers
 
 ``` python
 sns.scatterplot(x=train_df["carat"], y=train_df["price"])        
+
+print(f"Carat Outliers : {len(train_df[train_df['carat'] > 3])}") # Carat Outliers : 21
+train_df = train_df[train_df["carat"] <= 3 ]
 ```
 - Outliers were observed in the carat feature with values greater than 3.
-```python
-print(f"Carat Outliers : {len(train_df[train_df['carat'] > 3])}") # Visualization
-train_df = train_df[train_df["carat"] <= 3 ] # 3
-```
 - A total of 21 rows containing such outliers were dropped from the dataset.
 
 ``` python
-sns.scatterplot(x=train_df["depth"], y=train_df["price"])      
+sns.scatterplot(x=train_df["depth"], y=train_df["price"])
+
+print(f"Depth Outliers : {len(train_df[(train_df['depth'] < 50) | (train_df['depth'] > 75)])}") # Depth Outliers : 14
+train_df = train_df[(train_df["depth"] >= 50) & (train_df["depth"] <= 75)]    
 ```
 - Outliers were noticed in the depth feature less than 50 and greater than 75.
 - A total of 14 rows containing these outliers were removed.
 
 ``` python
-sns.scatterplot(x=train_df["table"], y=train_df["price"])     
+sns.scatterplot(x=train_df["table"], y=train_df["price"])
+
+print(f"Table Outliers : {len(train_df[(train_df['table'] < 50) | (train_df['table'] > 70)])}") # Table Outliers : 9
+train_df = train_df[(train_df["table"] >= 50) & (train_df["table"] <= 70)]     
 ```
 - Outliers were observed in the table feature less than 50 and greater than 70.
 - A total of 9 rows containing these outliers were removed.
 
 ``` python
-sns.scatterplot(data=train_df, x="x", y="price")  
+sns.scatterplot(data=train_df, x="x", y="price")
+
+print(f"X Outliers : {len(train_df[train_df['x'] > 9])}") # X Outliers : 10
+train_df = train_df[train_df["x"] <= 9]
 ```
 - Outliers were identified in the x feature after the value 9.
 - A total of 10 rows containing these outliers were removed.
 
 ``` python
 sns.scatterplot(data=train_df, x="y", y="price")
+
+print(f"Y Outliers : {len(train_df[train_df['y'] > 9])}") # Y Outliers : 0
+train_df = train_df[train_df["y"] <= 9]
 ```
 - Outliers were noticed in the y feature after the value 10.
 - No rows were found to contain such outliers.
 
 ``` python
 sns.scatterplot(data=train_df, x="z", y="price")
+
+print(f"Z Outliers : {len(train_df[(train_df['z'] < 2) | (train_df['z'] > 7)])}") # Z Outliers : 0
+train_df = train_df[(train_df["z"] >= 2) & (train_df["z"] <= 7)]
 ```
 - Outliers were observed in the z feature less than 2 and greater than 7.
 - No rows were found to contain such outliers.
 
 
-### 3.2.6 Countplot
+##### 3.2.6 Countplot
 ``` python
 ``` python
 mean_price_by_cut = train_df_copy.groupby("cut")["price"].mean().reindex(cut_column_unique_ordered)
@@ -271,7 +287,7 @@ We found there are 0 rows So,we drop it to make sure that there is not
 - cut (J) that have the smallest count has the largest price average
 We do so for color and clarity and found that the price dosn't depend on ctegorical features (as there are inverse relation between them and the price )
 
-### 3.2.7 Feature Engineering
+##### 3.2.7 Feature Engineering
 ``` python
 #creating volume column in both tain and test dataframe and drop the x,y and z
 train_df_copy["vol"] = train_df_copy["x"] * train_df_copy["y"] * train_df_copy["z"] # For Categorical Visualization
@@ -285,7 +301,7 @@ test_df.drop(["x", "y", "z"], axis=1, inplace=True)
 ```
 this reduces the dimensionality as we drop 3 columns and replaces it with one column
 
-### 3.2.8 Countplot 
+##### 3.2.8 Countplot 
 ``` python
 This code will generate three side-by-side bar plots showing the mean volume of diamonds grouped by cut, color, and clarity, respectively.
 mean_vol_by_cut     = train_df_copy.groupby("cut")["vol"].mean().reindex(cut_column_unique_ordered)
@@ -313,18 +329,125 @@ plt.show()
 **insights :**
 - The category with highest volume has highest price
 
+##### 3.2.9 Scaling & Spliting 
+##### 3.2.9.1 Scaling
+It helps algorithms converge faster and prevents features with larger scales from dominating those with smaller scales.
+
+```python
+y = train_df["price"]
+X = train_df.drop(["price"], axis=1)
+
+
+scaler = StandardScaler()
+scaler.fit(X)
+
+scaled_X = scaler.fit_transform(X)
+submission_data = scaler.fit_transform(test_df)
+```
+
+##### 3.2.9.2 Spliting
+Splits the dataset into training and testing set
+- Training set : Used to train the machine learning model.
+- Testing set : Used to evaluate the trained model's performance on unseen data.
+
+```python
+X_train, X_test, y_train, y_test = train_test_split(scaled_X, y, random_state=42, test_size = 0.2)
+```
 ***
 
 #### Model Selection & Training
 
+
+
 ***
 
 #### Model Evaluation
+Critical step in assessing the performance and effectiveness of a machine learning model
+```python
+randomForest_model2 = RandomForestRegressor()
+forest_scores = cross_val_score(randomForest_model2, X_train, y_train, scoring = "neg_mean_squared_error", cv = 5)
+forest_rmse_scores = np.sqrt(np.abs(forest_scores))
+
+for score in forest_rmse_scores:
+    print(round(score, 3))
+```
+***
+
+#### Model Fine-Tune
+Process of optimizing the hyperparameters of a machine learning model to improve its performance on the validation or test dataset
+```python
+param_grid = {
+    'n_estimators': [50, 100],
+    'max_features': [2, 3],
+    'max_depth'   : [None],
+    'min_samples_split' : [2, 5],
+    'min_samples_leaf'  : [1, 2],
+}
+
+randomForest_model3 = RandomForestRegressor(random_state = 42)
+
+grid_search = GridSearchCV(randomForest_model3, param_grid, cv = 5, scoring = 'neg_mean_squared_error', return_train_score = True)
+grid_search.fit(X_train, y_train)
+```
+- Grid Search: Exhaustively searching through a specified set of hyperparameters to find the combination that yields the best performance
+```python
+cvres = grid_search.cv_results_
+
+for mean_score, params in zip(cvres["mean_test_score"],cvres["params"]):
+    print(round(np.sqrt(np.abs(mean_score)), 2), params)
+```
+**Output :**
+```markdown
+559.13 {'max_depth': None, 'max_features': 2, 'min_samples_leaf': 1, 'min_samples_split': 2, 'n_estimators': 50}
+555.52 {'max_depth': None, 'max_features': 2, 'min_samples_leaf': 1, 'min_samples_split': 2, 'n_estimators': 100}
+559.31 {'max_depth': None, 'max_features': 2, 'min_samples_leaf': 1, 'min_samples_split': 5, 'n_estimators': 50}
+557.99 {'max_depth': None, 'max_features': 2, 'min_samples_leaf': 1, 'min_samples_split': 5, 'n_estimators': 100}
+565.79 {'max_depth': None, 'max_features': 2, 'min_samples_leaf': 2, 'min_samples_split': 2, 'n_estimators': 50}
+563.62 {'max_depth': None, 'max_features': 2, 'min_samples_leaf': 2, 'min_samples_split': 2, 'n_estimators': 100}
+566.91 {'max_depth': None, 'max_features': 2, 'min_samples_leaf': 2, 'min_samples_split': 5, 'n_estimators': 50}
+565.55 {'max_depth': None, 'max_features': 2, 'min_samples_leaf': 2, 'min_samples_split': 5, 'n_estimators': 100}
+540.74 {'max_depth': None, 'max_features': 3, 'min_samples_leaf': 1, 'min_samples_split': 2, 'n_estimators': 50}
+539.48 {'max_depth': None, 'max_features': 3, 'min_samples_leaf': 1, 'min_samples_split': 2, 'n_estimators': 100}
+541.43 {'max_depth': None, 'max_features': 3, 'min_samples_leaf': 1, 'min_samples_split': 5, 'n_estimators': 50}
+539.31 {'max_depth': None, 'max_features': 3, 'min_samples_leaf': 1, 'min_samples_split': 5, 'n_estimators': 100}
+544.91 {'max_depth': None, 'max_features': 3, 'min_samples_leaf': 2, 'min_samples_split': 2, 'n_estimators': 50}
+542.65 {'max_depth': None, 'max_features': 3, 'min_samples_leaf': 2, 'min_samples_split': 2, 'n_estimators': 100}
+545.04 {'max_depth': None, 'max_features': 3, 'min_samples_leaf': 2, 'min_samples_split': 5, 'n_estimators': 50}
+543.18 {'max_depth': None, 'max_features': 3, 'min_samples_leaf': 2, 'min_samples_split': 5, 'n_estimators': 100}
+```
+- Features importance : Used to identify the most influential features in the model
+```python
+feature_importances = grid_search.best_estimator_.feature_importances_
+
+# Plotting feature importances
+plt.figure(figsize=(10, 6))
+plt.bar(X.columns, feature_importances)
+plt.xlabel('Features')
+plt.ylabel('Feature Importance')
+plt.show()
+```
+**insights :**
+- The most influential features in the model are `vol` and `carat`
+
+***
+#### Model predictions
+- Retrieves the best model obtained from a grid search
+- Applies this model to make predictions on the `submission_data`
+
+```python
+best_model = grid_search.best_estimator_
+best_predictions = best_model.predict(submission_data)
+```
 
 ***
 
 ####  Submission Dataset (For Competition)
-
+The dataset to be submitted it should contain only 2 columns, 1st one is the IDs, 2nd one is the predictions
+So we need to concatenate the test_df IDs with the model predictions
+```python
+data_for_sub = pd.DataFrame({"ID":test_IDs, "price":best_predictions2})
+data_for_sub.to_csv("Submission RF.csv", index=False)
+```
 
 ### Summary
 This project focused on developing a machine learning regression model to predict diamond prices using a dataset containing various attributes of nearly 54,000 diamonds. Key steps and findings include:

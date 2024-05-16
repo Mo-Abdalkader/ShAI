@@ -11,7 +11,7 @@
 
 
 
-
+```markdown
 price -----------------------------------------------------> $326 : $18,823
 
 carat weight ---------------------------------------------->  0.2 : 5.01
@@ -29,3 +29,4 @@ depth 'total depth percentage' ----------------------------> 43 : 79 (%)
        = z / mean(x, y) = 2 * z / (x + y)
                              
 table 'width of top of diamond relative to widest point' --> 43 : 95
+```

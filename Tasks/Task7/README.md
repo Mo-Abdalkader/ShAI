@@ -39,7 +39,7 @@ table 'width of top of diamond relative to widest point' --> 43 : 95
 #### 3.1 Data Preprocessing
 Data preprocessing is a crucial step in preparing a dataset for machine learning. It involves cleaning, transforming, and organizing the data to ensure that it is in the best possible condition for model training.
 
-**Code : **
+**Code :**
 ```python
 # Summary of the DataFrame, including the data types and count of non-null values for each column.
 train_df.info()

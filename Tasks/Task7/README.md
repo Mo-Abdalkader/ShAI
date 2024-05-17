@@ -10,7 +10,7 @@
    4. Model Evaluation
    5. Model Fine-Tune
    6. Model predictions
-   7. Dataset Submission (For Competition)
+   7. Submission Dataset (For Competition)
 4. Summary
 
 

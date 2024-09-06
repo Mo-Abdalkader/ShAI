@@ -24,8 +24,6 @@ The challenge lies in handling a dataset with a variety of features, ensuring pr
 ### 2. Data Description
 The dataset used in this project contains various musical features that describe different aspects of music tracks. These features provide both acoustic and perceptual insights into the nature of each track, enabling us to classify them into genres. Below is a description of the key features:
 
-```markdown
-### Dataset Description
 
 | **Feature**            | **Description**                                                                                       |
 |------------------------|-------------------------------------------------------------------------------------------------------|
@@ -47,7 +45,7 @@ The dataset used in this project contains various musical features that describe
 | `duration_in min/ms`   | Duration of the track, in either minutes or milliseconds.                                              |
 | `time_signature`       | The number of beats per measure, indicating the track’s time signature.                                |
 | `Class`                | The target variable representing the genre of the track (classification label).                        |
-```
+
 ***
 ### 3. Methodology
 #### 3.1 Data Preprocessing

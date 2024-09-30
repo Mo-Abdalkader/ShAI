@@ -1,17 +1,17 @@
 # Project Documentation: Music Genre Classification
 
 ## Table of Contents
-1. Problem Statement
-2. Data Description
-3. Methodology  
-   1. Data Preprocessing  
-   2. Data Visualization  
-   3. Model Selection & Training  
-   4. Model Evaluation  
-   5. Model Fine-Tuning  
-   6. Model Predictions  
-   7. Submission Dataset (For Competition)  
-4. Summary
+1. [Problem Statement](#1-problem-statement)
+2. [Data Description](#2-data-description)
+3. [Methodology](#3-methodology)  
+   1. [Data Preprocessing](#31-data-preprocessing)  
+   2. [Data Visualization](#32-data-visualization)  
+   3. [Model Selection & Training](#33-model-selection--training)  
+   4. [Model Evaluation](#34-model-evaluation)  
+   5. [Model Fine-Tuning](#35-fine-tuning)  
+   6. [Model Predictions](#36-model-predictions)  
+   7. [Submission Dataset (For Competition)](#37-submission-dataset-for-competition)  
+4. [Summary](#4-summary)
 
 ### 1. Problem Statement
 > [!NOTE]  
